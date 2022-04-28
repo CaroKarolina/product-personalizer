@@ -1,7 +1,6 @@
 import styles from './ProductImage.module.scss';
 
 const ProductImage = props => {
-    console.log('color', props);
     return(
         <div className={styles.imageContainer}>
         <img 

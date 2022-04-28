@@ -1,12 +1,9 @@
 import styles from './Product.module.scss';
-import clsx from 'clsx';
-import Button from '../Button/Button';
 import PropTypes from 'prop-types';
 import { useState, useMemo } from 'react';
 import ProductImage from '../ProductImage/ProductImage';
-import OptionColor from '../OptionColor/OptionColor';
-import OptionSize from '../OptionSize/OptionSize';
-// import ProductForm from '../ProductForm/ProductForm';
+import ProductForm from '../ProductForm/ProductForm';
+import Button from '../Button/Button';
 // import { cleanup } from '@testing-library/react';
 
 const Product = props => {
@@ -14,10 +11,19 @@ const Product = props => {
   const [currentColor, setCurrentColor] = useState(props.colors[0]);
   const [currentSize, setCurrentSize] = useState(props.sizes[0].name);
 
-  const price = useMemo(()=>{
+  const price = useMemo(() => {
     const correctSize = props.sizes.find((size)=> size.name === currentSize);
     return props.basePrice + correctSize.additionalPrice
-  }, [currentSize, props.sizes]);
+  }, [currentSize, props.sizes, props.basePrice]);
+
+  const handleSubmit = e => {
+    console.log('your choice :')
+    console.log('name :', props.name)
+    console.log('price :', price);
+    console.log('color :', currentColor);
+    console.log('size :', currentSize)
+    e.preventDefault();
+  }
 
   return (
     <article className={styles.product}>
@@ -27,15 +33,9 @@ const Product = props => {
           <h2 className={styles.name}>{props.title}</h2>
           <span className={styles.price}>{'Price: ' + price + ' $'}</span>
         </header>
-        <form>
-          <h3 className={styles.optionLabel}>Sizes</h3>
-          <OptionSize sizes={props.sizes} setCurrentSize={setCurrentSize} currentSize={currentSize} />
-          <h3 className={styles.optionLabel}>Colors</h3>
-          <OptionColor colors={props.colors} setCurrentColor={setCurrentColor} currentColor={currentColor} />
-          <Button className={styles.button}>
-            <span className="fa fa-shopping-cart" />
-          </Button>
-        </form>
+        <ProductForm key={props.id} sizes={props.sizes} colors={props.colors} currentSize={currentSize}
+        setCurrentSize={setCurrentSize} currentColor={currentColor} setCurrentColor={setCurrentColor} handleSubmit={handleSubmit} />
+        <Button className={styles.button} onClick={handleSubmit} />
       </div>
     </article>
   )
